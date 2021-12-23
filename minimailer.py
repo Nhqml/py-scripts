@@ -46,12 +46,13 @@ def wrap(content: str,
          width: int = 74,
          break_long_words: bool = False,
          replace_whitespace: bool = False,
-         drop_whitespace: bool = False,
          **kwargs) -> str:
     wrapped_lines = []
 
     for line in content.splitlines():
-        if line.strip() == '':
+        if line == '-- ':  # Signature line: you don't want it to be changed!
+            wrapped_lines.append(line)
+        elif line.strip() == '':
             wrapped_lines.append('')
         else:
             wrapped_lines.extend(
@@ -59,7 +60,6 @@ def wrap(content: str,
                               width=width,
                               break_long_words=break_long_words,
                               replace_whitespace=replace_whitespace,
-                              drop_whitespace=drop_whitespace,
                               **kwargs))
 
     return '\n'.join(wrapped_lines)
