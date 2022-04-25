@@ -104,6 +104,10 @@ def compose_mass_email(data: list[dict[str, str]],
 def send_mass_email(args: argparse.Namespace) -> None:
     jinja_env = Environment(loader=FileSystemLoader(args.template_dir))
 
+    # Add useful filters
+    for method in [str.splitlines]:
+        jinja_env.filters[method.__name__] = method
+
     try:
         jinja_template = jinja_env.get_template(args.template_name)
     except TemplateNotFound:
