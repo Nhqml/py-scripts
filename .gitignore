@@ -1,0 +1,5 @@
+.secret/
+
+# Minimailer
+*.j2
+*.csv

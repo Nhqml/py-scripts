@@ -189,11 +189,12 @@ def get_argparser():
     )
     parser.add_argument("sender", help="'From' field of the email")
     parser.add_argument("template_name", help="name of the Jinja2 template to use")
-    parser.add_argument("--subject", help="subject of the email")
+    parser.add_argument("-s", "--subject", help="subject of the email")
 
     parser.add_argument("--reply-to", help="'Reply-to' field of the email")
 
     parser.add_argument(
+        "-r",
         "--recipients",
         help=(
             "email's recipients format-string - Python syntax (default: `%(default)s`)"
@@ -202,6 +203,7 @@ def get_argparser():
         nargs="*",
     )
     parser.add_argument(
+        "-a",
         "--attachments",
         help="email's attachments format-strings - Python syntax",
         nargs="*",
@@ -222,12 +224,14 @@ def get_argparser():
     )
 
     parser.add_argument(
+        "-d",
         "--template-dir",
         help="directory where Jinja2 templates are stored",
         default=".",
     )
 
     parser.add_argument(
+        "-n",
         "--dry-run",
         "--fake-run",
         help="do not send mail, save them to a temp dir for review instead",
