@@ -138,11 +138,17 @@ def send_mass_email(args: argparse.Namespace) -> None:
 
     data = read_data(args.data_csv)
 
-    sender = formataddr(parseaddr(args.sender))
-
     mail_headers = {
-        "From": sender,
+        "From": formataddr(parseaddr(args.sender)),
     }
+
+    if args.cc:
+        mail_headers["Cc"] = ", ".join([formataddr(parseaddr(cc)) for cc in args.cc])
+
+    if args.bcc:
+        mail_headers["bcc"] = ", ".join(
+            [formataddr(parseaddr(bcc)) for bcc in args.bcc]
+        )
 
     if args.subject:
         mail_headers["Subject"] = args.subject
@@ -152,7 +158,11 @@ def send_mass_email(args: argparse.Namespace) -> None:
         mail_headers["Reply-to"] = reply_to
 
     mails = compose_mass_email(
-        data, mail_headers, args.recipients, jinja_template, args.attachments
+        data,
+        mail_headers,
+        args.recipients,
+        jinja_template,
+        args.attachments,
     )
 
     if args.dry_run:
@@ -192,6 +202,9 @@ def get_argparser():
     parser.add_argument("-s", "--subject", help="subject of the email")
 
     parser.add_argument("--reply-to", help="'Reply-to' field of the email")
+
+    parser.add_argument("--cc", help="'Cc' field of the email", nargs="*")
+    parser.add_argument("--bcc", help="'Bcc' field of the email", nargs="*")
 
     parser.add_argument(
         "-r",
