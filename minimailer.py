@@ -143,11 +143,13 @@ def send_mass_email(args: argparse.Namespace) -> None:
     }
 
     if args.cc:
-        mail_headers["Cc"] = ", ".join([formataddr(parseaddr(cc)) for cc in args.cc])
+        mail_headers["Cc"] = ", ".join(
+            [formataddr(parseaddr(cc)) for ccs in args.cc for cc in ccs]
+        )
 
     if args.bcc:
-        mail_headers["bcc"] = ", ".join(
-            [formataddr(parseaddr(bcc)) for bcc in args.bcc]
+        mail_headers["Bcc"] = ", ".join(
+            [formataddr(parseaddr(bcc)) for bccs in args.bcc for bcc in bccs]
         )
 
     if args.subject:
@@ -203,8 +205,12 @@ def get_argparser():
 
     parser.add_argument("--reply-to", help="'Reply-to' field of the email")
 
-    parser.add_argument("--cc", help="'Cc' field of the email", nargs="*")
-    parser.add_argument("--bcc", help="'Bcc' field of the email", nargs="*")
+    parser.add_argument(
+        "--cc", help="'Cc' field of the email", nargs="+", action="append"
+    )
+    parser.add_argument(
+        "--bcc", help="'Bcc' field of the email", nargs="+", action="append"
+    )
 
     parser.add_argument(
         "-r",
